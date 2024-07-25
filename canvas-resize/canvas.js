@@ -41,23 +41,52 @@ console.log(canvas)
 //   c.stroke()
 // }
 
+let mouse = {
+  x: undefined,
+  y: undefined
+}
+
+window.addEventListener('mousemove', (event) => {
+  // console.log(event)
+
+  mouse.x = event.x
+  mouse.y = event.y
+
+  // console.log(mouse)
+})
+
+window.addEventListener('resize', (event) => {
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
+
+  init()
+})
+
+function init () {
+  
+}
+
 class Circle {
   constructor () {
     this.radius = Math.random() * 40 + 10
     this.x = Math.floor(Math.random() * (innerWidth - 2 * this.radius)) + this.radius
     this.y = Math.floor(Math.random() * (innerHeight - 2 * this.radius)) + this.radius
-    this.dx = (Math.random() - 0.5) * 10
-    this.dy = (Math.random() - 0.5) * 10
-    this.red = Math.floor(Math.random() * 256)
-    this.green = Math.floor(Math.random() * 256)
-    this.blue = Math.floor(Math.random() * 256)
-    this.alpha = Math.random()
+    this.dx = (Math.random() - 0.5) * 5
+    this.dy = (Math.random() - 0.5) * 5
+    this.color = [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.random()]
+    this._radius = this.radius
   }
   
   draw () {
+    if (Math.abs(this.x - mouse.x) < 100 && Math.abs(this.y - mouse.y) < 100 && this.radius < this._radius * 7) {
+      this.radius += 2
+    } else if ((Math.abs(this.x - mouse.x) >= 100 || Math.abs(this.y - mouse.y) >= 100) && this.radius > this._radius) {
+      this.radius -= 1
+    }
+
     c.beginPath()
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
-    c.strokeStyle = `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`
+    c.strokeStyle = `rgba(${this.color[0]}, ${this.color[1]}, ${this.color[2]}, ${this.color[3]})`
     c.lineWidth = 10
     c.stroke()
   }
@@ -75,7 +104,7 @@ class Circle {
 
 let circles = []
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 300; i++) {
   circles.push(new Circle())
 }
 
